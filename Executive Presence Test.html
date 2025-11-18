@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presence Sprint - Tech Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+        
+        function trackEvent(category, action, label) {
+            gtag('event', action, {
+                'event_category': category,
+                'event_label': label
+            });
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 95%;
+            text-align: center;
+            position: relative;
+        }
+
+        .intro-screen {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .industry-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .problem-statement {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .problem-statement h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .problem-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .problem-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 16px;
+        }
+
+        .problem-list li:last-child {
+            border-bottom: none;
+        }
+
+        .problem-list li::before {
+            content: "❌ ";
+            margin-right: 10px;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 20px 50px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .demo-screen {
+            display: none;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .demo-box {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .scenario {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .scenario-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid transparent;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+        }
+
+        .option:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            background: rgba(40, 167, 69, 0.8);
+            border-color: #28a745;
+            animation: pulse 0.5s ease;
+        }
+
+        .option.incorrect {
+            background: rgba(220, 53, 69, 0.8);
+            border-color: #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 15px;
+            text-align: left;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feedback-content {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .feedback-content strong {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .results-screen {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .results-box {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 48px;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .results-list {
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .results-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 16px;
+        }
+
+        .results-list li:last-child {
+            border-bottom: none;
+        }
+
+        .next-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .next-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            margin-left: 15px;
+        }
+
+        .secondary-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .lead-form {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        .lead-form h3 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .submit-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .privacy-note {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 15px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .forteen-badge {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            .problem-statement {
+                padding: 20px;
+            }
+
+            .demo-box, .results-box {
+                padding: 25px;
+            }
+
+            .cta-button {
+                padding: 16px 40px;
+                font-size: 18px;
+            }
+
+            .secondary-button {
+                margin-left: 0;
+                margin-top: 15px;
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Intro Screen -->
+        <div class="intro-screen" id="introScreen">
+            <div class="logo">Presence Sprint</div>
+            <div class="tagline">Find your voice in 60 seconds</div>
+            <div class="industry-badge">💻 Tech Edition</div>
+            
+            <div class="problem-statement">
+                <h2>Do you struggle with:</h2>
+                <ul class="problem-list">
+                    <li>Hesitating before speaking in stand-ups</li>
+                    <li>Using filler words like "um", "uh", "like"</li>
+                    <li>Apologizing when you shouldn't ("Sorry, but...")</li>
+                    <li>Not sounding confident even when you know your stuff</li>
+                </ul>
+            </div>
+
+            <button class="cta-button" onclick="startDemo()">
+                Try a Quick Demo →
+            </button>
+
+            <div class="forteen-badge">
+                A micro-learning tool by <strong>Forteen</strong>
+            </div>
+        </div>
+
+        <!-- Demo Screen -->
+        <div class="demo-screen" id="demoScreen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="demo-box">
+                <div class="scenario-title" id="scenarioTitle">🎯 SCENARIO 1/3</div>
+                <div class="scenario" id="scenarioText"></div>
+
+                <div class="options" id="optionsContainer"></div>
+
+                <div class="feedback" id="feedbackBox">
+                    <h3 id="feedbackTitle">✓ Correct!</h3>
+                    <div class="feedback-content" id="feedbackContent"></div>
+                </div>
+            </div>
+
+            <button class="next-button" id="nextButton" style="display: none;" onclick="nextScenario()">
+                Next Scenario →
+            </button>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <div class="results-box">
+                <h2>Demo Complete! 🎉</h2>
+                
+                <div class="score-circle" id="scoreDisplay">3/3</div>
+
+                <p style="margin-bottom: 30px; font-size: 18px;">
+                    You can spot executive presence! Now imagine <strong>building it yourself</strong> through practice.
+                </p>
+
+                <ul class="results-list">
+                    <li>✅ Learn to eliminate filler words</li>
+                    <li>✅ Practice confident openings</li>
+                    <li>✅ Build assertive communication</li>
+                    <li>✅ Get real-time voice feedback</li>
+                    <li>✅ Track your progress with XP & streaks</li>
+                </ul>
+
+                <p style="margin: 30px 0; font-size: 16px; opacity: 0.9;">
+                    <strong>Presence Sprint</strong> gives you 15+ scenarios to practice speaking with confidence in tech contexts: stand-ups, code reviews, architecture discussions, and more.
+                </p>
+
+                <!-- Lead Capture Form -->
+                <div class="lead-form">
+                    <h3>🚀 Be the first to know when we launch!</h3>
+                    <p style="margin-bottom: 20px;">Join 400+ tech professionals on the waitlist</p>
+                    <form id="leadForm" onsubmit="submitLead(event)">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Work Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="company" placeholder="Company Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="role" placeholder="Your Role" required>
+                        </div>
+                        <button type="submit" class="submit-button">
+                            Get Early Access
+                        </button>
+                        <p class="privacy-note">
+                            We respect your privacy. No spam, ever. Unsubscribe anytime.
+                        </p>
+                    </form>
+                </div>
+
+                <button class="next-button secondary-button" onclick="location.reload()" style="margin-top: 20px; display: inline-block;">
+                    Try Demo Again
+                </button>
+
+                <div class="forteen-badge" style="margin-top: 40px;">
+                    Built by <strong>Forteen</strong> | Great people. Great outcomes.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                title: "🎯 SCENARIO 1/3: Stand-up Confidence",
+                question: 'You\'re in a daily stand-up. Your tech lead asks: <strong>"What did you work on yesterday?"</strong><br><br>Which response shows better executive presence?',
+                options: [
+                    {
+                        text: '"Um, so basically I was just working on the authentication module and, uh, I didn\'t quite finish everything but I made some progress..."',
+                        correct: false,
+                        feedback: 'Too many filler words ("um", "basically", "just", "uh") and apologetic tone. This undermines your credibility even if you did good work.'
+                    },
+                    {
+                        text: '"I completed the authentication module and started API integration. On track for Friday."',
+                        correct: true,
+                        feedback: 'Clear, concise, confident. No filler words, no apologies. States facts and timeline. This is executive presence.'
+                    }
+                ],
+                correctAnswer: 'Direct and specific. Great executives don\'t apologize for progress—they state facts clearly.'
+            },
+            {
+                title: "🎯 SCENARIO 2/3: Pushing Back",
+                question: 'Your PM wants a feature by EOD. You know it needs 3 days. How do you respond?',
+                options: [
+                    {
+                        text: '"Sorry, but that timeline might be kind of challenging because, um, the database schema needs refactoring and..."',
+                        correct: false,
+                        feedback: 'Apologizing for reality + filler words + over-explaining = weak. You\'re stating facts, not asking permission.'
+                    },
+                    {
+                        text: '"That needs three days. The auth layer requires proper testing. I can deliver Friday COB."',
+                        correct: true,
+                        feedback: 'Firm boundary, clear reasoning, specific alternative. No apologies needed—you\'re the expert on implementation time.'
+                    }
+                ],
+                correctAnswer: 'Assertive without being aggressive. Set clear expectations backed by technical reasoning.'
+            },
+            {
+                title: "🎯 SCENARIO 3/3: Presenting Your Solution",
+                question: 'In an architecture review, a senior engineer asks: <strong>"Why should we use this approach?"</strong>',
+                options: [
+                    {
+                        text: '"Well, I thought maybe this could work because, you know, the latency is better and, um, it simplifies things..."',
+                        correct: false,
+                        feedback: 'Hedging words ("maybe", "I thought", "you know") make you sound uncertain. Lead with impact, not uncertainty.'
+                    },
+                    {
+                        text: '"This approach reduces latency by 40% and simplifies our deployment pipeline. Here\'s the implementation..."',
+                        correct: true,
+                        feedback: 'Lead with measurable impact, then explain. Confident and data-driven. This is how technical leaders communicate.'
+                    }
+                ],
+                correctAnswer: 'Start with the "why it matters", then explain the "how". Impact before implementation.'
+            }
+        ];
+
+        let currentScenario = 0;
+        let score = 0;
+
+        function startDemo() {
+            trackEvent('Engagement', 'demo_start', 'tech');
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('demoScreen').style.display = 'block';
+            loadScenario(0);
+            updateProgress();
+        }
+
+        function shuffleArray(array) {
+            // Fisher-Yates shuffle algorithm - properly randomizes array
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function loadScenario(index) {
+            const scenario = scenarios[index];
+            
+            document.getElementById('scenarioTitle').textContent = scenario.title;
+            document.getElementById('scenarioText').innerHTML = scenario.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            // ✅ SHUFFLE OPTIONS - Prevents pattern recognition
+            const shuffledOptions = shuffleArray(scenario.options);
+            
+            shuffledOptions.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option.text;
+                // Pass the option object so we can access its properties
+                optionDiv.onclick = () => selectOption(i, option.correct, option);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            document.getElementById('feedbackBox').classList.remove('show');
+            document.getElementById('nextButton').style.display = 'none';
+        }
+
+        function selectOption(index, correct, option) {
+            trackEvent('Engagement', 'option_selected', 'scenario_' + (currentScenario + 1));
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (correct) {
+                options[index].classList.add('correct');
+                score++;
+                showFeedback(true, scenarios[currentScenario].correctAnswer);
+                trackEvent('Engagement', 'correct_answer', 'scenario_' + (currentScenario + 1));
+            } else {
+                options[index].classList.add('incorrect');
+                // ✅ Use the option object's feedback
+                showFeedback(false, option.feedback);
+                trackEvent('Engagement', 'incorrect_answer', 'scenario_' + (currentScenario + 1));
+            }
+
+            document.getElementById('nextButton').style.display = 'inline-block';
+        }
+
+        function showFeedback(correct, content) {
+            const feedbackBox = document.getElementById('feedbackBox');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackContent = document.getElementById('feedbackContent');
+
+            if (correct) {
+                feedbackTitle.textContent = '✓ Excellent!';
+                feedbackContent.innerHTML = `<strong>Why this works:</strong><br>${content}`;
+            } else {
+                feedbackTitle.textContent = '✗ Not quite';
+                feedbackContent.innerHTML = `<strong>What went wrong:</strong><br>${content}`;
+            }
+
+            feedbackBox.classList.add('show');
+        }
+
+        function nextScenario() {
+            currentScenario++;
+            updateProgress();
+
+            if (currentScenario < scenarios.length) {
+                loadScenario(currentScenario);
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentScenario + 1) / scenarios.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showResults() {
+            trackEvent('Engagement', 'demo_complete', 'tech_score_' + score);
+            document.getElementById('demoScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            document.getElementById('scoreDisplay').textContent = score + '/' + scenarios.length;
+        }
+
+        function submitLead(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const company = document.getElementById('company').value;
+            const role = document.getElementById('role').value;
+            
+            trackEvent('Conversion', 'lead_captured', 'tech');
+            
+            const subject = encodeURIComponent('Presence Sprint Tech - Early Access Request');
+            const body = encodeURIComponent(
+                `New Lead - Tech Edition\n\n` +
+                `Name: ${name}\n` +
+                `Email: ${email}\n` +
+                `Company: ${company}\n` +
+                `Role: ${role}\n` +
+                `Score: ${score}/3\n` +
+                `Date: ${new Date().toLocaleString()}`
+            );
+            
+            document.getElementById('leadForm').innerHTML = `
+                <div style="text-align: center; padding: 30px 0;">
+                    <h3 style="margin-bottom: 15px;">🎉 You're on the list!</h3>
+                    <p>We'll email you at <strong>${email}</strong> when Presence Sprint launches.</p>
+                    <p style="margin-top: 15px; font-size: 14px; opacity: 0.8;">
+                        Meanwhile, follow us on LinkedIn for updates and tips!
+                    </p>
+                </div>
+            `;
+            
+            window.open(`mailto:girish.vasudevan@gmail.com?subject=${subject}&body=${body}`, '_blank');
+        }
+
+        function trackEvent(category, action, label) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', action, {
+                    'event_category': category,
+                    'event_label': label
+                });
+            }
+            console.log('Event tracked:', category, action, label);
+        }
+    </script>
+</body>
+</html>
